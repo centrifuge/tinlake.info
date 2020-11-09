@@ -1,7 +1,7 @@
 // import logo from './logo.svg';
 import React from 'react';
 import './App.css';
-import mainnetPools from '@centrifuge/tinlake-pools-mainnet'
+//import mainnetPools from '@centrifuge/tinlake-pools-mainnet'
 //import contractsABI from './dapp.sol.json'
 import {gql, useQuery} from '@apollo/client'
 import Chart from 'chart.js'

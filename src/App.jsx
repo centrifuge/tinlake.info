@@ -26,6 +26,10 @@ let parseDecimal = (str) => {
   return ethers.BigNumber.from(str).div(ethers.BigNumber.from("1000000000000000000")).toString();
 }
 
+let parseDate = (str) => {
+  let date = new Date(parseInt(str)*1000)
+  return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+}
 
 function prepareData (data) {
   let labels = []
@@ -34,7 +38,7 @@ function prepareData (data) {
   const last = data.days.length-1;
   data.days.forEach((d, i) => {
     if (last === i) { return }
-    labels.push(d.id)
+    labels.push(parseDate(d.id))
     assetValue.push(parseDecimal(d.assetValue))
     reserve.push(parseDecimal(d.reserve))
   })
@@ -45,12 +49,16 @@ function prepareData (data) {
       {
         label: "Asset Value",
         data: assetValue,
-        backgroundColor: 'rgba(20, 255, 20, 0.5)'
+        lineTension: 0,
+        pointRadius:0,
+        backgroundColor: 'rgba(39, 98, 255, 0.9)'
       },
       {
         label: "Reserve",
         data: reserve,
-        backgroundColor: 'rgba(20, 20, 255, 0.5)'
+        lineTension: 0,
+        pointRadius:0,
+        backgroundColor: 'rgba(39, 98, 255, 0.5)'
       },
     ]
   }
@@ -65,6 +73,7 @@ class AssetValueAreaChart extends React.Component {
           type: "line",
           data: prepareData(this.props.data),
           options: {
+            responsive:true,
             scales: {
               yAxes: [{
                 stacked: true
@@ -74,7 +83,7 @@ class AssetValueAreaChart extends React.Component {
       });
     }
     componentDidMount() {
-        this.buildChart();
+        this.buildChart()
     }
 
     componentDidUpdate() {
@@ -83,7 +92,7 @@ class AssetValueAreaChart extends React.Component {
     render() {
         return (
             <div>
-                <canvas
+                <canvas style={{width:"400px", height:"70%"}}
                     ref={this.chartRef}
                 />
             </div>

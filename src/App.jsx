@@ -2,14 +2,14 @@
 import React from 'react';
 import './App.css';
 import mainnetPools from '@centrifuge/tinlake-pools-mainnet'
-import contractsABI from './dapp.sol.json'
+//import contractsABI from './dapp.sol.json'
 import {gql, useQuery} from '@apollo/client'
 import Chart from 'chart.js'
 import ethers from 'ethers'
 
-function loadPools() {
-  return mainnetPools.filter((pool) => pool.version == 3 && pool.addresses != null);
-}
+//function loadPools() {
+//  return mainnetPools.filter((pool) => pool.version == 3 && pool.addresses != null);
+//}
 
 const dailyPool = gql`
 query {
@@ -33,7 +33,7 @@ function prepareData (data) {
   let reserve = []
   const last = data.days.length-1;
   data.days.forEach((d, i) => {
-    if (last == i) { return }
+    if (last === i) { return }
     labels.push(d.id)
     assetValue.push(parseDecimal(d.assetValue))
     reserve.push(parseDecimal(d.reserve))

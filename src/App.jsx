@@ -107,7 +107,7 @@ function App() {
     return (
       <div className="App">
         <header className="App-header">
-          <h1><img src={logo} />tinlake.info</h1>
+          <h1><img src={logo} alt=""/>tinlake.info</h1>
       </header>
       <AssetValueAreaChart data={data}/>
       </div>

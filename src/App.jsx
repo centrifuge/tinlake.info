@@ -35,9 +35,7 @@ function prepareData (data) {
   let labels = []
   let assetValue = []
   let reserve = []
-  const last = data.days.length-1;
   data.days.forEach((d, i) => {
-    if (last === i) { return }
     labels.push(parseDate(d.id))
     assetValue.push(parseDecimal(d.assetValue))
     reserve.push(parseDecimal(d.reserve))

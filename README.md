@@ -1,7 +1,6 @@
 # tinlake.info
 Quick and dirty datavisualisations based on the [Tinlake subgraph](https://github.com/centrifuge/tinlake-subgraph) and on-chain data for Tinlake.
 
-
 ## Available Scripts
 
 In the project directory, you can run:

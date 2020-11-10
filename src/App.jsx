@@ -1,6 +1,7 @@
-// import logo from './logo.svg';
-import React from 'react';
-import './App.css';
+import React from 'react'
+import './App.css'
+import logo from './logo.svg'
+
 //import mainnetPools from '@centrifuge/tinlake-pools-mainnet'
 //import contractsABI from './dapp.sol.json'
 import {gql, useQuery} from '@apollo/client'
@@ -90,7 +91,7 @@ class AssetValueAreaChart extends React.Component {
     render() {
         return (
             <div>
-                <canvas style={{width:"400px", height:"70%"}}
+                <canvas style={{width:"400px", height:"55%"}}
                     ref={this.chartRef}
                 />
             </div>
@@ -106,8 +107,8 @@ function App() {
     return (
       <div className="App">
         <header className="App-header">
-          <h1>tinlake.info</h1>
-        </header>
+          <h1><img src={logo} />tinlake.info</h1>
+      </header>
       <AssetValueAreaChart data={data}/>
       </div>
     )

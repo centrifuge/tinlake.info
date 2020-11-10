@@ -1,6 +1,9 @@
 .App {
   text-align:center;
 }
+.assetValueChart {
+  height: 60vh;
+}
 h1 img {
   display:block;
   margin:0 auto;

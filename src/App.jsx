@@ -110,6 +110,7 @@ function App() {
           <h1><img src={logo} alt=""/>tinlake.info</h1>
       </header>
       <AssetValueAreaChart data={data}/>
+      <a href="https://tinlake.centrifuge.io">tinlake.centrifuge.io</a>
       </div>
     )
 }

@@ -5,8 +5,8 @@ import logo from './logo.svg'
 //import mainnetPools from '@centrifuge/tinlake-pools-mainnet'
 //import contractsABI from './dapp.sol.json'
 import {gql, useQuery} from '@apollo/client'
-import Chart from 'chart.js'
 import ethers from 'ethers'
+import { Line } from 'react-chartjs-2';
 
 //function loadPools() {
 //  return mainnetPools.filter((pool) => pool.version == 3 && pool.addresses != null);
@@ -32,68 +32,52 @@ let parseDate = (str) => {
   return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 }
 
-function prepareData (data) {
-  let labels = []
-  let assetValue = []
-  let reserve = []
-  data.days.forEach((d, i) => {
-    labels.push(parseDate(d.id))
-    assetValue.push(parseDecimal(d.assetValue))
-    reserve.push(parseDecimal(d.reserve))
-  })
-
-  return {
-    labels: labels,
-    datasets: [
-      {
-        label: "Asset Value",
-        data: assetValue,
-        lineTension: 0,
-        pointRadius:0,
-        backgroundColor: 'rgba(39, 98, 255, 0.9)'
-      },
-      {
-        label: "Reserve",
-        data: reserve,
-        lineTension: 0,
-        pointRadius:0,
-        backgroundColor: 'rgba(39, 98, 255, 0.5)'
-      },
-    ]
-  }
-}
-
 
 class AssetValueAreaChart extends React.Component {
-    chartRef = React.createRef();
-    buildChart() {
-      const _ref = this.chartRef.current.getContext("2d");
-      new Chart(_ref, {
-          type: "line",
-          data: prepareData(this.props.data),
-          options: {
-            responsive:true,
+    prepareData () {
+      let labels = []
+      let assetValue = []
+      let reserve = []
+      this.props.data.days.forEach((d, i) => {
+        labels.push(parseDate(d.id))
+        assetValue.push(parseDecimal(d.assetValue))
+        reserve.push(parseDecimal(d.reserve))
+      })
+
+      return {
+        labels: labels,
+        datasets: [
+          {
+            label: "Asset Value",
+            data: assetValue,
+            lineTension: 0,
+            pointRadius:0,
+            backgroundColor: 'rgba(39, 98, 255, 0.9)'
+          },
+          {
+            label: "Reserve",
+            data: reserve,
+            lineTension: 0,
+            pointRadius:0,
+            backgroundColor: 'rgba(39, 98, 255, 0.5)'
+          },
+        ]
+      }
+    }
+    prepareOptions() {
+        return {
+            maintainAspectRatio: false, // Don't maintain w/h ratio
             scales: {
               yAxes: [{
                 stacked: true
               }]
             }
           }
-      });
-    }
-    componentDidMount() {
-        this.buildChart()
-    }
-
-    componentDidUpdate() {
-        this.buildChart();
     }
     render() {
         return (
-            <div>
-                <canvas style={{width:"400px", height:"55%"}}
-                    ref={this.chartRef}
-                />
+            <div className="assetValueChart">
+                <Line data={this.prepareData()} options={this.prepareOptions()} />
             </div>
         )
     }

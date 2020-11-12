@@ -6,43 +6,46 @@ import logo from './logo.svg'
 import { StoreProvider, useStoreActions} from 'easy-peasy';
 import { store } from './store';
 
-
-import { gql, useQuery } from '@apollo/client'
-//import { toDAINumberFormat, parseDecimal, parseDate } from './format'
-//
 import { AssetValueAreaChart} from './components/assetvaluechart'
 import { PoolList } from './components/poollist'
 
-//import mainnetPools from '@centrifuge/tinlake-pools-mainnet'
-//function loadPools() {
-//  return mainnetPools.filter((pool) => pool.version == 3 && pool.addresses != null);
-//}
+const useInterval = (callback: any, delay: number) => {
+  const savedCallback = React.useRef()
 
-const dailyPool = gql`
-query {
-  days {
-    id
-    reserve
-    assetValue
-  }
-}`
+  React.useEffect(() => {
+    savedCallback.current = callback
+  }, [callback])
+
+  React.useEffect(() => {
+    function tick() {
+      if (savedCallback.current) (savedCallback).current()
+    }
+    if (delay !== null) {
+      const id = setInterval(tick, delay)
+      return () => clearInterval(id)
+    }
+  }, [delay])
+}
+
+function DataContainer(props) {
+    const loadData = useStoreActions((actions) => actions.loadData);
+    useEffect(() => { loadData() }, [loadData])
+    useInterval(() => { loadData() }, 1000) // TODO: does not work
+    return (props.children)
+}
 
 function App() {
-    const {loading, data} = useQuery(dailyPool)
-    const loadData = useStoreActions((actions) => actions.loadData);
-    useEffect(() => { loadData() }, [])
-    if (loading) {
-      return (<h1>Loading</h1>)
-    }
     return (
       <StoreProvider store={store}>
         <div className="App">
           <header className="App-header">
             <h1><img src={logo} alt=""/>tinlake.info</h1>
         </header>
-           <AssetValueAreaChart data={data}/>
+        <DataContainer>
+           <AssetValueAreaChart />
            <PoolList />
-        <a href="https://tinlake.centrifuge.io">tinlake.centrifuge.io</a>
+        </DataContainer>
+        <a className="dapp-link" href="https://tinlake.centrifuge.io">tinlake.centrifuge.io</a>
         </div>
       </StoreProvider>
     )

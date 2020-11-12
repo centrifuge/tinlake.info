@@ -9,13 +9,16 @@
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.1",
     "@testing-library/user-event": "^12.2.0",
+    "bignumber.js": "^9.0.1",
     "chart.js": "^2.9.4",
+    "easy-peasy": "^4.0.1",
     "ethers": "^5.0.19",
     "graphql": "^15.4.0",
     "react": "^17.0.1",
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.0",
+    "react-tracked": "^1.4.2",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

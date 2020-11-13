@@ -9,6 +9,7 @@ import { store } from './store';
 import { AssetValueAreaChart } from './components/assetvaluechart'
 import { OriginationsChart } from './components/originationschart'
 import { PoolList } from './components/poollist'
+import { TotalNumbers } from './components/totals'
 
 const useInterval = (callback: any, delay: number) => {
   const savedCallback = React.useRef()
@@ -47,6 +48,7 @@ function App() {
               <AssetValueAreaChart />
               <OriginationsChart />
            </div>
+           <TotalNumbers />
            <PoolList />
         </DataContainer>
         <a className="dapp-link" href="https://tinlake.centrifuge.io">tinlake.centrifuge.io</a>

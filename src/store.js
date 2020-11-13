@@ -65,7 +65,11 @@ loaders.push((actions) => {
         let pools = {}
         res[0].forEach((p) => {pools[p.key] = p})
         res[1].forEach((p) => {pools[p.key] = p})
+        let totalValueLocked = Object.values(pools).reduce((t, p) => {
+          return t.plus(p.poolSize)
+        }, new BigNumber('0'))
         actions.set({key: 'pools', value: pools})
+        actions.set({key: 'totalValueLocked', value: totalValueLocked})
       })
 })
 
@@ -80,6 +84,7 @@ query {
 
 loaders.push((actions) => {
     return graphClient.query({query: dailyAssetValue}).then((query) => {
+      console.log(query.data.days[query.data.days.length-1])
       actions.set({key:'dailyAssetValue', value: query.data})
     })
 })
@@ -112,13 +117,13 @@ loaders.push((actions) => {
         dateOpened: new Date(parseInt(l.opened)*1000),
         amount: parseDecimal(l.borrowsAggregatedAmount),
       }})
+    let totalOriginated = loans.reduce((o, l) => { return o.plus(l.amount)}, new BigNumber('0'))
     let start = getWeek(1588707251+secondsInWeek*8)
     let stop  = getWeek(new Date().getTime()/1000)
     let empty = {}
     for (let i = start; i <= stop; i+=secondsInWeek) {
       empty[i] = {date: i, count:0, amount: new BigNumber('0')}
     }
-
     let weeks = loans.reduce((w, l) => {
       let date = getWeek(l.dateOpened.getTime()/1000)
       if (date < start) { return w}
@@ -130,6 +135,9 @@ loaders.push((actions) => {
     }, empty)
     actions.set({key: 'weeklyOriginations', value: Object.values(weeks)})
     actions.set({key: 'loans', value: loans})
+    actions.set({key: 'totalLoans', value: loans.length})
+    actions.set({key: 'totalOriginated', value: totalOriginated})
+    console.log('origin/loans', totalOriginated.toString(), loans.length)
   })
 })
 
@@ -138,6 +146,10 @@ const store = createStore({
   loans: {},
   weeklyOriginations: [],
   dailyAssetValue: { days:[]},
+  totalOriginated: new BigNumber('0'),
+  totalValueLocked: new BigNumber('0'),
+  totalAssetValue: new BigNumber('0'),
+  totalLoans: 0,
   set: action((state, payload) => {
     state[payload.key] = payload.value;
   }),

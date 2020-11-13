@@ -1,17 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import config from './config'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { ApolloProvider } from "@apollo/client"
-import { graphClient, legacyGraphClient } from './graphsource'
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={graphClient}>
-      <App />
-    </ApolloProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

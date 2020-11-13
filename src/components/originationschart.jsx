@@ -1,6 +1,6 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
-import { toDAINumberFormat, parseDecimal, parseDate } from '../format'
+import { toDAINumberFormat, parseDate } from '../format'
 import { useStoreState } from 'easy-peasy';
 
 export const OriginationsChart= () => {

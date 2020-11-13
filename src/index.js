@@ -1,21 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import config from './config';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import {ApolloClient, HttpLink, InMemoryCache, ApolloProvider} from "@apollo/client"
-
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri: config.graph,
-  }),
-  cache: new InMemoryCache()
-})
+import React from 'react'
+import ReactDOM from 'react-dom'
+import './index.css'
+import config from './config'
+import App from './App'
+import reportWebVitals from './reportWebVitals'
+import { ApolloProvider } from "@apollo/client"
+import { graphClient, legacyGraphClient } from './graphsource'
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
+    <ApolloProvider client={graphClient}>
       <App />
     </ApolloProvider>
   </React.StrictMode>,

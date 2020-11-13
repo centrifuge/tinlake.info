@@ -1,15 +1,6 @@
 .App {
   padding:20px;
 }
-.main-chart div {
-  height:35vh;
-  width:45vw;
-  margin:1.25vh 1.25vw;
-  display:inline-block;
-}
-.assetValueChart {
-  height: 40vh;
-}
 
 header {
   text-align:center;
@@ -20,8 +11,40 @@ header h1 img {
     margin:0 auto;
 }
 
+.main-chart div {
+  height:35vh;
+  width:45vw;
+  margin:1.25vh 1.25vw;
+  display:inline-block;
+}
+
+.totals {
+  width:91vw;
+  margin:15px auto;
+}
+.totals p {
+  color:#555;
+  font-size:0.75em;
+  text-align:center;
+}
+.totals .total-number {
+  display:inline-block;
+  height:8vh;
+  width:28vw;
+  margin:0px 1vw;
+  text-align:center;
+  box-shadow: 2px 2px 4px #eee;
+  padding-bottom:5px;
+}
+.totals .total-number h2 {
+  font-size:0.75em;
+  color:#555;
+}
+.totals .total-number span {
+  font-size:2em;
+}
 .pool-list h2 {
-  margin-top:6vh;
+  margin-top:4vh;
 }
 .pool-list table {
   width:100%;
@@ -34,7 +57,15 @@ header h1 img {
 }
 .pool-item {
 }
-
+.v3-label {
+  border-radius:3px;
+  background-color:#eee;
+  color:#888;
+  font-size:0.75em;
+  padding:0px 3px;
+  margin-left:3px;
+  margin-bottom:4px;
+}
 .pool-icon {
   border-radius:50%;
   object-fit: cover;

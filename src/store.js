@@ -84,7 +84,6 @@ query {
 
 loaders.push((actions) => {
     return graphClient.query({query: dailyAssetValue}).then((query) => {
-      console.log(query.data.days[query.data.days.length-1])
       actions.set({key:'dailyAssetValue', value: query.data})
     })
 })
@@ -98,7 +97,9 @@ query {
       id
     }
     opened
+    closed
     borrowsAggregatedAmount
+    repaysAggregatedAmount
   }
 }
 `
@@ -112,10 +113,12 @@ loaders.push((actions) => {
   return currentGraphClient.query({query:loanData}).then((query) => {
     let loans = query.data.loans.filter((l) => config.ignorePools.indexOf(l.pool.id) < 0)
     loans = loans.map((l) => {
+      let amount = parseDecimal(l.repaysAggregatedAmount)
+      if (l.closed == null) amount = parseDecimal(l.borrowsAggregatedAmount)
       return {
         key: l.id,
         dateOpened: new Date(parseInt(l.opened)*1000),
-        amount: parseDecimal(l.borrowsAggregatedAmount),
+        amount: amount,
       }})
     let totalOriginated = loans.reduce((o, l) => { return o.plus(l.amount)}, new BigNumber('0'))
     let start = getWeek(1588707251+secondsInWeek*8)
@@ -137,7 +140,6 @@ loaders.push((actions) => {
     actions.set({key: 'loans', value: loans})
     actions.set({key: 'totalLoans', value: loans.length})
     actions.set({key: 'totalOriginated', value: totalOriginated})
-    console.log('origin/loans', totalOriginated.toString(), loans.length)
   })
 })
 

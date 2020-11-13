@@ -25,7 +25,6 @@ const Pool = (props) => {
 
 const sortPools = (pools) => {
   let sortedPools = Object.values(pools)
-  sortedPools = sortedPools.filter((p) => p.key !== "0xeb33ab19d17d62950b16e843005fcdda62d5f551" && p.key !== "0x05597dd9b8e1d4fdb44eb69d20bc3a2feef605e8")
   sortedPools.sort((a, b) => {
       return b.poolSize.minus(a.poolSize)
   })

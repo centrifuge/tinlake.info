@@ -15,5 +15,9 @@ export const legacyGraphClient = new ApolloClient({
   cache: new InMemoryCache()
 })
 
-
-
+export const currentGraphClient = new ApolloClient({
+  link: new HttpLink({
+    uri: config.currentGraphUrl,
+  }),
+  cache: new InMemoryCache()
+})

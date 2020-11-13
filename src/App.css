@@ -1,6 +1,12 @@
 .App {
   padding:20px;
 }
+.main-chart div {
+  height:35vh;
+  width:45vw;
+  margin:1.25vh 1.25vw;
+  display:inline-block;
+}
 .assetValueChart {
   height: 40vh;
 }

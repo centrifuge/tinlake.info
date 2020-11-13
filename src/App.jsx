@@ -6,7 +6,8 @@ import logo from './logo.svg'
 import { StoreProvider, useStoreActions} from 'easy-peasy';
 import { store } from './store';
 
-import { AssetValueAreaChart} from './components/assetvaluechart'
+import { AssetValueAreaChart } from './components/assetvaluechart'
+import { OriginationsChart } from './components/originationschart'
 import { PoolList } from './components/poollist'
 
 const useInterval = (callback: any, delay: number) => {
@@ -42,7 +43,10 @@ function App() {
             <h1><img src={logo} alt=""/>tinlake.info</h1>
         </header>
         <DataContainer>
-           <AssetValueAreaChart />
+           <div className="main-chart">
+              <AssetValueAreaChart />
+              <OriginationsChart />
+           </div>
            <PoolList />
         </DataContainer>
         <a className="dapp-link" href="https://tinlake.centrifuge.io">tinlake.centrifuge.io</a>

@@ -88,6 +88,21 @@ loaders.push((actions) => {
     })
 })
 
+const legacyLoanData = gql`
+query {
+  loans {
+    id
+    pool {
+      id
+    }
+    opened
+    closed
+    borrowsAggregatedAmount
+    repaysAggregatedAmount
+  }
+}
+`
+
 
 const loanData = gql`
 query {
@@ -110,8 +125,12 @@ const getWeek = (d) => {
 }
 
 loaders.push((actions) => {
-  return graphClient.query({query:loanData}).then((query) => {
-    let loans = query.data.loans.filter((l) => config.ignorePools.indexOf(l.pool.id) < 0)
+  return Promise.all([
+    graphClient.query({query: loanData}),
+    legacyGraphClient.query({query: legacyLoanData})
+  ]).then((query) => {
+    let loans = query[0].data.loans.filter((l) => config.ignorePools.indexOf(l.pool.id) < 0)
+    loans.push(...query[1].data.loans.filter((l) => config.ignorePools.indexOf(l.pool.id) < 0))
     loans = loans.map((l) => {
       let amount = parseDecimal(l.repaysAggregatedAmount)
       if (l.closed == null) amount = parseDecimal(l.borrowsAggregatedAmount)

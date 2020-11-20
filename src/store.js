@@ -22,7 +22,8 @@ query {
   pools {
     id
     shortName
-    totalDebt
+    assetValue
+    reserve
     totalRepaysAggregatedAmount
   }
 }
@@ -48,9 +49,9 @@ loaders.push((actions) => {
       graphClient.query({query: poolsQuery}).then((query) => {
         let pools = query.data.pools.filter((p) => config.ignorePools.indexOf(p.id) < 0)
         return pools.map((pool) => {
-          let assetValue = parseDecimal('0')//pool.assetValue)
-          let reserve = parseDecimal('0') //pool.reserve)
-          let poolSize = parseDecimal(pool.totalDebt)//assetValue.plus(reserve)
+          let assetValue = parseDecimal(pool.assetValue)
+          let reserve = parseDecimal(pool.reserve)
+          let poolSize = assetValue.plus(reserve)
           return {
             key: pool.id,
             name: pool.shortName,

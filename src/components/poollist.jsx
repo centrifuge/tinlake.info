@@ -17,7 +17,7 @@ const Pool = (props) => {
   let poolVersionLabel = meta.version === 2 ? '' : (<span className="v3-label">V3</span>);
   let icon = (<div className="pool-icon-empty"></div>);
   if (meta.metadata.logo) {
-    icon = (<img className="pool-icon" src={meta.metadata.logo} alt="" />)
+//    icon = (<img className="pool-icon" src={meta.metadata.logo} alt="" />)
   }
   return (<tr className="pool-item">
       <td>{icon}</td>

@@ -9,6 +9,8 @@ function loadPoolMeta(key) {
 
 
 const Pool = (props) => {
+  // eslint-disable-next-line
+  return (null)
   let pool = props.pool
   let meta = loadPoolMeta(pool.name)
   if (!meta) {

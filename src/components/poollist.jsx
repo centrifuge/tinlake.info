@@ -4,20 +4,21 @@ import { formatDAI } from '../format'
 
 import mainnetPools from '@centrifuge/tinlake-pools-mainnet'
 function loadPoolMeta(key) {
-  return mainnetPools.find((pool) => pool.shortName === key);
+  return mainnetPools.find((pool) => pool.metadata.shortName === key);
 }
 
 
 const Pool = (props) => {
   let pool = props.pool
-  let meta = loadPoolMeta(pool.shortName)
+  let meta = loadPoolMeta(pool.name)
   if (!meta) {
       return null;
   }
   let poolVersionLabel = meta.version === 2 ? '' : (<span className="v3-label">V3</span>);
+
   let icon = (<div className="pool-icon-empty"></div>);
   if (meta.metadata.logo) {
-//    icon = (<img className="pool-icon" src={meta.metadata.logo} alt="" />)
+    icon = (<img className="pool-icon" src={meta.metadata.logo} alt="" />)
   }
   return (<tr className="pool-item">
       <td>{icon}</td>

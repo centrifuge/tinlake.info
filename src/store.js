@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { graphClient, legacyGraphClient, currentGraphClient } from './graphsource'
+import { graphClient, legacyGraphClient } from './graphsource'
 import { thunk, action, createStore } from 'easy-peasy'
 import { BigNumber } from 'bignumber.js'
 import { parseDecimal } from './format'
@@ -22,8 +22,7 @@ query {
   pools {
     id
     shortName
-    assetValue
-    reserve
+    totalDebt
     totalRepaysAggregatedAmount
   }
 }
@@ -49,9 +48,9 @@ loaders.push((actions) => {
       graphClient.query({query: poolsQuery}).then((query) => {
         let pools = query.data.pools.filter((p) => config.ignorePools.indexOf(p.id) < 0)
         return pools.map((pool) => {
-          let assetValue = parseDecimal(pool.assetValue)
-          let reserve = parseDecimal(pool.reserve)
-          let poolSize = assetValue.plus(reserve)
+          let assetValue = parseDecimal('0')//pool.assetValue)
+          let reserve = parseDecimal('0') //pool.reserve)
+          let poolSize = parseDecimal(pool.totalDebt)//assetValue.plus(reserve)
           return {
             key: pool.id,
             name: pool.shortName,
@@ -110,7 +109,7 @@ const getWeek = (d) => {
 }
 
 loaders.push((actions) => {
-  return currentGraphClient.query({query:loanData}).then((query) => {
+  return graphClient.query({query:loanData}).then((query) => {
     let loans = query.data.loans.filter((l) => config.ignorePools.indexOf(l.pool.id) < 0)
     loans = loans.map((l) => {
       let amount = parseDecimal(l.repaysAggregatedAmount)

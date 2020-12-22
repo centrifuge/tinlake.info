@@ -11,14 +11,15 @@ function loadPoolMeta(key) {
 const Pool = (props) => {
   let pool = props.pool
   let meta = loadPoolMeta(pool.name)
+
   if (!meta) {
       return null;
   }
   let poolVersionLabel = meta.version === 2 ? '' : (<span className="v3-label">V3</span>);
 
   let icon = (<div className="pool-icon-empty"></div>);
-  if (meta.metadata.logo) {
-    icon = (<img className="pool-icon" src={meta.metadata.logo} alt="" />)
+  if (meta.metadata.media.logo) {
+    icon = (<img className="pool-icon" src={meta.metadata.media.logo} alt="" />)
   }
   return (<tr className="pool-item">
       <td>{icon}</td>

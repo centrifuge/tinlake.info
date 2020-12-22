@@ -8,11 +8,5 @@ export const graphClient = new ApolloClient({
   cache: new InMemoryCache()
 })
 
-export const legacyGraphClient = new ApolloClient({
-  link: new HttpLink({
-    uri: config.legacyGraphUrl,
-  }),
-  cache: new InMemoryCache()
-})
 
 

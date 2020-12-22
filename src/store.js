@@ -1,21 +1,11 @@
 import { gql } from '@apollo/client'
-import { graphClient, legacyGraphClient } from './graphsource'
+import { graphClient } from './graphsource'
 import { thunk, action, createStore } from 'easy-peasy'
 import { BigNumber } from 'bignumber.js'
 import { parseDecimal } from './format'
 import config from './config'
 
 const loaders = []
-
-const v2PoolsQuery = gql`
-query {
-  pools {
-    id
-    shortName
-    totalDebt
-    totalRepaysAggregatedAmount
-  }
-}`
 
 const poolsQuery = gql`
 query {
@@ -30,23 +20,7 @@ query {
 `
 
 loaders.push((actions) => {
-    return Promise.all([
-      legacyGraphClient.query({query: v2PoolsQuery }).then((query) => {
-        let pools = query.data.pools.filter((p) => config.ignorePools.indexOf(p.id) < 0)
-        return pools.map((pool) => {
-          let totalDebt = parseDecimal(pool.totalDebt)
-
-          return {
-            key: pool.id,
-            name: pool.shortName,
-            assetValue: totalDebt,
-            poolSize: totalDebt,
-            reserve: parseDecimal('0'),
-            totalOriginated: parseDecimal(pool.totalRepaysAggregatedAmount).plus(totalDebt),
-          }
-        })
-      }),
-      graphClient.query({query: poolsQuery}).then((query) => {
+    return graphClient.query({query: poolsQuery}).then((query) => {
         let pools = query.data.pools.filter((p) => config.ignorePools.indexOf(p.id) < 0)
         return pools.map((pool) => {
           let assetValue = parseDecimal(pool.assetValue)
@@ -61,10 +35,9 @@ loaders.push((actions) => {
             totalOriginated: parseDecimal(pool.totalRepaysAggregatedAmount).plus(assetValue)
           }
         })
-      })]).then((res) => {
+      }).then((res) => {
         let pools = {}
-        res[0].forEach((p) => {pools[p.key] = p})
-        res[1].forEach((p) => {pools[p.key] = p})
+        res.forEach((p) => {pools[p.key] = p})
         let totalValueLocked = Object.values(pools).reduce((t, p) => {
           return t.plus(p.poolSize)
         }, new BigNumber('0'))
@@ -88,22 +61,6 @@ loaders.push((actions) => {
     })
 })
 
-const legacyLoanData = gql`
-query {
-  loans {
-    id
-    pool {
-      id
-    }
-    opened
-    closed
-    borrowsAggregatedAmount
-    repaysAggregatedAmount
-  }
-}
-`
-
-
 const loanData = gql`
 query {
   loans {
@@ -125,12 +82,8 @@ const getWeek = (d) => {
 }
 
 loaders.push((actions) => {
-  return Promise.all([
-    graphClient.query({query: loanData}),
-    legacyGraphClient.query({query: legacyLoanData})
-  ]).then((query) => {
-    let loans = query[0].data.loans.filter((l) => config.ignorePools.indexOf(l.pool.id) < 0)
-    loans.push(...query[1].data.loans.filter((l) => config.ignorePools.indexOf(l.pool.id) < 0))
+  return graphClient.query({query: loanData}).then((query) => {
+    let loans = query.data.loans.filter((l) => config.ignorePools.indexOf(l.pool.id) < 0)
     loans = loans.map((l) => {
       let amount = parseDecimal(l.repaysAggregatedAmount)
       if (l.closed == null) amount = parseDecimal(l.borrowsAggregatedAmount)
@@ -140,7 +93,7 @@ loaders.push((actions) => {
         amount: amount,
       }})
     let totalOriginated = loans.reduce((o, l) => { return o.plus(l.amount)}, new BigNumber('0'))
-    let start = getWeek(1588707251+secondsInWeek*8)
+    let start = getWeek(1588707251+secondsInWeek*24)
     let stop  = getWeek(new Date().getTime()/1000)
     let empty = {}
     for (let i = start; i <= stop; i+=secondsInWeek) {

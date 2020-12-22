@@ -23,7 +23,6 @@ export const TotalNumbers = () => {
         <h2>Total Loans</h2>
         <span>{totalLoans}</span>
       </div>
-      <p>Total values are across Tinlake v2 & Tinlake v3. Asset Value and Reserve Graph only includes v3 pools.</p>
     </div>
   )
 }

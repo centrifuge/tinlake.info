@@ -1,13 +1,11 @@
-import React from 'react'
-import { useStoreState } from 'easy-peasy'
-import { formatDAI } from '../format'
-
-
+import React from "react";
+import { useStoreState } from "easy-peasy";
+import { formatDAI } from "../format";
 
 export const TotalNumbers = () => {
-  const totalOriginated = useStoreState((state) => state.totalOriginated)
-  const totalLoans = useStoreState((state) => state.totalLoans)
-  const totalValueLocked = useStoreState((state) => state.totalValueLocked)
+  const totalOriginated = useStoreState((state) => state.totalOriginated);
+  const totalLoans = useStoreState((state) => state.totalLoans);
+  const totalValueLocked = useStoreState((state) => state.totalValueLocked);
 
   return (
     <div className="totals">
@@ -24,6 +22,5 @@ export const TotalNumbers = () => {
         <span>{totalLoans}</span>
       </div>
     </div>
-  )
-}
-
+  );
+};

@@ -1,10 +1,8 @@
-import React from 'react';
+import React from "react";
 
 class DataField extends React.Component {
   render() {
-    return (
-      <h2>Pool Info</h2>
-    )
+    return <h2>Pool Info</h2>;
   }
 }
 

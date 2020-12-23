@@ -6,13 +6,32 @@ export const parseDecimal = (str) => {
 };
 
 export const parseDate = (str) => {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
   let date = new Date(parseInt(str) * 1000);
-  return (
-    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-  );
+  return `${date.getDate()} ${
+    months[date.getMonth()]
+  } '${date.getFullYear().toString().slice(2)}`;
+
+  // return (
+  //   date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+  // );
 };
 
-export const formatDAI = (num) => {
+export const formatValue = (num) => {
   return (
     "DAI " +
     num.toFormat(2, {
@@ -25,19 +44,18 @@ export const formatDAI = (num) => {
   );
 };
 
-export const formatDAI = (num) => {
-  return "DAI "+formatValue(num)
-}
+// export const formatDAI = (num) => {
+//   return "DAI " + formatValue(num);
+// };
 
 export const compactDAILabel = (num) => {
-  return formatValue(new BigNumber(num).div(new BigNumber(1000000)))+"M"
-}
-
-
-export const toDAINumberFormat = (str) => {
-  return formatDAI(new BigNumber(str));
+  return formatValue(new BigNumber(num).div(new BigNumber(1000000))) + "M";
 };
 
-export const strToDAINumberFormat = (str) => {
-  return toDAINumberFormat(parseDecimal(str));
-};
+// export const toDAINumberFormat = (str) => {
+//   return formatDAI(new BigNumber(str));
+// };
+
+// export const strToDAINumberFormat = (str) => {
+//   return toDAINumberFormat(parseDecimal(str));
+// };

@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Box, ResponsiveContext } from "grommet";
 import { Line } from "react-chartjs-2";
-import { toDAINumberFormat, parseDecimal, parseDate } from "../format";
+import { parseDecimal, parseDate, compactDAILabel } from "../format";
 import { useStoreState } from "easy-peasy";
 
 export const AssetValueAreaChart = () => {
+  const size = useContext(ResponsiveContext);
+
   const dailyAssetValue = useStoreState((state) => state.dailyAssetValue);
 
   let prepareData = () => {
@@ -37,7 +40,7 @@ export const AssetValueAreaChart = () => {
     };
   };
 
-  let prepareOptions = () => {
+  let prepareOptions = (size) => {
     return {
       maintainAspectRatio: false, // Don't maintain w/h ratio
       scales: {
@@ -46,8 +49,17 @@ export const AssetValueAreaChart = () => {
             ticks: {
               // Include a dollar sign in the ticks
               callback: (value, index, values) => {
-                return toDAINumberFormat(value);
+                return compactDAILabel(value);
               },
+            },
+            stacked: true,
+          },
+        ],
+        xAxes: [
+          {
+            ticks: {
+              minRotation: size === "small" ? 90 : 0,
+              maxRotation: 90,
             },
             stacked: true,
           },
@@ -57,8 +69,8 @@ export const AssetValueAreaChart = () => {
   };
 
   return (
-    <div className="assetValueChart">
-      <Line data={prepareData()} options={prepareOptions()} />
-    </div>
+    <Box flex="grow">
+      <Line data={prepareData()} options={prepareOptions(size)} />
+    </Box>
   );
 };

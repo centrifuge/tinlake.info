@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Bar } from "react-chartjs-2";
-import { compactDAILabel, formatDate, parseDate } from "../format";
+import { compactDAILabel, parseDate } from "../format";
 import { useStoreState } from "easy-peasy";
+import { Box, ResponsiveContext } from "grommet";
 
 export const OriginationsChart = () => {
+  const size = useContext(ResponsiveContext);
+
   const weeklyOriginations = useStoreState((state) => state.weeklyOriginations);
 
   let prepareData = () => {
@@ -29,7 +32,7 @@ export const OriginationsChart = () => {
     };
   };
 
-  let prepareOptions = () => {
+  let prepareOptions = (size) => {
     return {
       maintainAspectRatio: false, // Don't maintain w/h ratio
       scales: {
@@ -44,13 +47,22 @@ export const OriginationsChart = () => {
             stacked: true,
           },
         ],
+        xAxes: [
+          {
+            ticks: {
+              minRotation: size === "small" ? 90 : 0,
+              maxRotation: 90,
+            },
+            stacked: true,
+          },
+        ],
       },
     };
   };
 
   return (
-    <div className="originationsChart">
-      <Bar data={prepareData()} options={prepareOptions()} />
-    </div>
+    <Box flex="grow">
+      <Bar data={prepareData()} options={prepareOptions(size)} />
+    </Box>
   );
 };

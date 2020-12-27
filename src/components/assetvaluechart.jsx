@@ -1,6 +1,6 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
-import { toDAINumberFormat, parseDecimal, parseDate } from '../format'
+import { compactDAILabel, parseDecimal, formatDate, parseDate } from '../format'
 import { useStoreState } from 'easy-peasy';
 
 export const AssetValueAreaChart = () => {
@@ -11,7 +11,7 @@ export const AssetValueAreaChart = () => {
       let assetValue = []
       let reserve = []
       dailyAssetValue.days.forEach((d, i) => {
-        labels.push(parseDate(d.id))
+        labels.push(formatDate(parseDate(d.id)))
         assetValue.push(parseDecimal(d.assetValue))
         reserve.push(parseDecimal(d.reserve))
       })
@@ -39,13 +39,13 @@ export const AssetValueAreaChart = () => {
 
     let prepareOptions = () => {
         return {
-            maintainAspectRatio: false, // Don't maintain w/h ratio
+            maintainAspectRatio: false,
             scales: {
               yAxes: [{
                 ticks: {
                     // Include a dollar sign in the ticks
                     callback: (value, index, values) => {
-                        return toDAINumberFormat(value)
+                        return compactDAILabel(value)
                     }
                 },
                 stacked: true

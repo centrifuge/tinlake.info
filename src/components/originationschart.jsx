@@ -1,6 +1,6 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
-import { toDAINumberFormat, parseDate } from '../format'
+import { compactDAILabel, formatDate, parseDate } from '../format'
 import { useStoreState } from 'easy-peasy';
 
 export const OriginationsChart= () => {
@@ -33,11 +33,17 @@ export const OriginationsChart= () => {
         return {
             maintainAspectRatio: false, // Don't maintain w/h ratio
             scales: {
-              yAxes: [{
+              xAxes: [{
                 ticks: {
-                    // Include a dollar sign in the ticks
                     callback: (value, index, values) => {
-                        return toDAINumberFormat(value)
+                        return formatDate(value)
+                    }
+                },
+              }],
+               yAxes: [{
+                ticks: {
+                    callback: (value, index, values) => {
+                        return compactDAILabel(value)
                     }
                 },
                 stacked: true

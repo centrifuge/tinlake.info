@@ -1,63 +1,76 @@
-import React from 'react'
-import { Line } from 'react-chartjs-2'
-import { compactDAILabel, parseDecimal, formatDate, parseDate } from '../format'
-import { useStoreState } from 'easy-peasy';
+import React, { useContext } from "react";
+import { Box, ResponsiveContext } from "grommet";
+import { Line } from "react-chartjs-2";
+import { parseDecimal, parseDate, compactDAILabel } from "../format";
+import { useStoreState } from "easy-peasy";
 
 export const AssetValueAreaChart = () => {
-    const dailyAssetValue = useStoreState((state) => state.dailyAssetValue);
+  const size = useContext(ResponsiveContext);
 
-    let prepareData = () => {
-      let labels = []
-      let assetValue = []
-      let reserve = []
-      dailyAssetValue.days.forEach((d, i) => {
-        labels.push(formatDate(parseDate(d.id)))
-        assetValue.push(parseDecimal(d.assetValue))
-        reserve.push(parseDecimal(d.reserve))
-      })
+  const dailyAssetValue = useStoreState((state) => state.dailyAssetValue);
 
-      return {
-        labels: labels,
-        datasets: [
+  let prepareData = () => {
+    let labels = [];
+    let assetValue = [];
+    let reserve = [];
+    dailyAssetValue.days.forEach((d, i) => {
+      labels.push(parseDate(d.id));
+      assetValue.push(parseDecimal(d.assetValue));
+      reserve.push(parseDecimal(d.reserve));
+    });
+
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label: "Asset Value",
+          data: assetValue,
+          lineTension: 0,
+          pointRadius: 0,
+          backgroundColor: "rgba(39, 98, 255, 0.9)",
+        },
+        {
+          label: "Reserve",
+          data: reserve,
+          lineTension: 0,
+          pointRadius: 0,
+          backgroundColor: "rgba(39, 98, 255, 0.5)",
+        },
+      ],
+    };
+  };
+
+  let prepareOptions = (size) => {
+    return {
+      maintainAspectRatio: false, // Don't maintain w/h ratio
+      scales: {
+        yAxes: [
           {
-            label: "Asset Value",
-            data: assetValue,
-            lineTension: 0,
-            pointRadius:0,
-            backgroundColor: 'rgba(39, 98, 255, 0.9)'
+            ticks: {
+              // Include a dollar sign in the ticks
+              callback: (value, index, values) => {
+                return compactDAILabel(value);
+              },
+            },
+            stacked: true,
           },
+        ],
+        xAxes: [
           {
-            label: "Reserve",
-            data: reserve,
-            lineTension: 0,
-            pointRadius:0,
-            backgroundColor: 'rgba(39, 98, 255, 0.5)'
+            ticks: {
+              minRotation: size === "small" ? 90 : 0,
+              maxRotation: 90,
+            },
+            stacked: true,
           },
-        ]
-      }
-    }
+        ],
+      },
+    };
+  };
 
-    let prepareOptions = () => {
-        return {
-            maintainAspectRatio: false,
-            scales: {
-              yAxes: [{
-                ticks: {
-                    // Include a dollar sign in the ticks
-                    callback: (value, index, values) => {
-                        return compactDAILabel(value)
-                    }
-                },
-                stacked: true
-              }]
-            }
-        }
-    }
-    return (
-      <div className="assetValueChart">
-          <Line data={prepareData()} options={prepareOptions()} />
-      </div>
-    )
-}
-
-
+  return (
+    <Box flex="grow">
+      <Line data={prepareData()} options={prepareOptions(size)} />
+    </Box>
+  );
+};

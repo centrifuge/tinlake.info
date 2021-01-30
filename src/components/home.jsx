@@ -8,6 +8,7 @@ import { AssetValueAreaChart } from "./assetvaluechart";
 import { OriginationsChart } from "./originationschart";
 import { TotalNumbers } from "./totals";
 import { PoolList } from "./poollist";
+import { UserChart } from './components/userchart'
 
 const useInterval = (callback: any, delay: number) => {
   const savedCallback = React.useRef();
@@ -74,6 +75,9 @@ export const Charts = () => {
       </Box>
       <Box width={size === "small" ? "100%" : "50%"} height="350px">
         <OriginationsChart />
+      </Box>
+      <Box width={size === "small" ? "100%" : "50%"} height="350px">
+        <UserChart/>
       </Box>
     </Box>
   );

@@ -55,13 +55,16 @@ loaders.push((actions) => {
     });
 });
 
+
+const msInDay = 24*60*60*1000
+const startingDay = parseInt(new Date(new Date().getTime() - new Date().getTime() % msInDay - 90*msInDay).getTime()/1000)
+
 const dailyAssetValue = gql`
-  query {
-    days {
-      id
-      reserve
-      assetValue
-    }
+query {
+  days (orderBy: id, orderDirection: asc, where: {id_gt: "${startingDay}"}) {
+    id
+    reserve
+    assetValue
   }
 `;
 
@@ -73,7 +76,7 @@ loaders.push((actions) => {
 
 const loanData = gql`
   query {
-    loans {
+    loans (first:1000) {
       id
       pool {
         id
@@ -132,6 +135,50 @@ loaders.push((actions) => {
   });
 });
 
+// orderBy: day__id, orderDirection: asc, where: {day__id_gt: "${startingDay}"},
+const dailyInvestorTokenBalances = gql`
+{
+  dailyInvestorTokenBalances (first:1000) {
+    pool {
+      id
+    }
+    account {
+      id
+    }
+    day {
+      id
+    }
+    seniorTokenValue
+    juniorTokenValue
+  }
+}
+`
+
+
+
+loaders.push((actions) => {
+    return graphClient.query({query: dailyInvestorTokenBalances }).then((query) => {
+        let days = {}
+        query.data.dailyInvestorTokenBalances.forEach((ditb) => {
+          let day = ditb.day.id
+          if (days[day] == null) days[day] = { balances: {}, count: 0, total: new BigNumber("0")}
+          let balanceKey = ditb.pool.id + ditb.account.id
+          let value = parseDecimal(ditb.seniorTokenValue).plus(parseDecimal(ditb.juniorTokenValue))
+          // days[day].balances[balanceKey] = {account: ditb.account.id, pool: ditb.pool.id, value: value}
+          days[day].total = days[day].total.plus(value)
+          days[day].count += 1
+        })
+
+
+        Object.keys(days).forEach((k) => {
+          days[k].average = days[k].total.div(days[k].count)
+        })
+        actions.set({key: 'dailyUsers', value: days})
+    })
+})
+
+
+
 const store = createStore({
   pools: {},
   loans: {},
@@ -140,6 +187,7 @@ const store = createStore({
   totalOriginated: new BigNumber("0"),
   totalValueLocked: new BigNumber("0"),
   totalAssetValue: new BigNumber("0"),
+  dailyUsers: {},
   totalLoans: 0,
   set: action((state, payload) => {
     state[payload.key] = payload.value;

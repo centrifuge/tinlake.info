@@ -6,7 +6,6 @@ import "./App.css";
 
 import { StoreProvider } from "easy-peasy";
 import { store } from "./store";
-
 import { Home } from "./components/home";
 
 function App() {

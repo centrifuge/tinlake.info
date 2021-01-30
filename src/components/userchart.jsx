@@ -49,7 +49,7 @@ export const UserChart = () => {
     }
     return (
      <Box flex="grow">
-          <Line data={prepareData()} options={prepareOptions()} />
+          <Line data={prepareData()} options={prepareOptions(size)} />
     </Box>
     )
 }

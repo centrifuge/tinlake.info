@@ -162,7 +162,7 @@ loaders.push((actions) => {
         query.data.dailyInvestorTokenBalances.forEach((ditb) => {
           let day = ditb.day.id
           if (days[day] == null) days[day] = { balances: {}, count: 0, total: new BigNumber("0")}
-          let balanceKey = ditb.pool.id + ditb.account.id
+          //let balanceKey = ditb.pool.id + ditb.account.id
           let value = parseDecimal(ditb.seniorTokenValue).plus(parseDecimal(ditb.juniorTokenValue))
           // days[day].balances[balanceKey] = {account: ditb.account.id, pool: ditb.pool.id, value: value}
           days[day].total = days[day].total.plus(value)

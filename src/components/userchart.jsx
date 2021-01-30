@@ -30,13 +30,14 @@ export const UserChart = () => {
       }
     }
 
-    let prepareOptions = () => {
+    let prepareOptions = (size) => {
         return {
             maintainAspectRatio: false,
             scales: {
               yAxes: [{
                 ticks: {
-                    // Include a dollar sign in the ticks
+                    minRotation: size === "small" ? 90 : 0,
+                    maxRotation: 90,
                     callback: (value, index, values) => {
                         return value
                     }

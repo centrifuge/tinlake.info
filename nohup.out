@@ -1,0 +1,2 @@
+Bridge is already running.
+time="2021-01-20T16:43:06Z" level=info msg="Run app" appName="ProtonMail Bridge" args="[protonmail-bridge --no-window]" build= pkg=cmd revision= runtime=linux version=1.5.0-git

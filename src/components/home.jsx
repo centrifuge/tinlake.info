@@ -8,7 +8,7 @@ import { AssetValueAreaChart } from "./assetvaluechart";
 import { OriginationsChart } from "./originationschart";
 import { TotalNumbers } from "./totals";
 import { PoolList } from "./poollist";
-import { UserChart } from './components/userchart'
+import { UserChart } from './userchart'
 
 const useInterval = (callback: any, delay: number) => {
   const savedCallback = React.useRef();

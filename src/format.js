@@ -44,18 +44,8 @@ export const formatValue = (num) => {
   );
 };
 
-// export const formatDAI = (num) => {
-//   return "DAI " + formatValue(num);
-// };
-
 export const compactDAILabel = (num) => {
   return formatValue(new BigNumber(num).div(new BigNumber(1000000))) + "M";
 };
 
-// export const toDAINumberFormat = (str) => {
-//   return formatDAI(new BigNumber(str));
-// };
 
-// export const strToDAINumberFormat = (str) => {
-//   return toDAINumberFormat(parseDecimal(str));
-// };

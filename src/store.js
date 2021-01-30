@@ -66,7 +66,7 @@ query {
     reserve
     assetValue
   }
-`;
+}`;
 
 loaders.push((actions) => {
   return graphClient.query({ query: dailyAssetValue }).then((query) => {

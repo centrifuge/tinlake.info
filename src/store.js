@@ -136,9 +136,11 @@ loaders.push((actions) => {
 });
 
 // orderBy: day__id, orderDirection: asc, where: {day__id_gt: "${startingDay}"},
-const dailyInvestorTokenBalances = gql`
+let ditbQuery = (offset) => {
+  offset = offset * 1000
+  return graphClient.query({ query: gql`
 {
-  dailyInvestorTokenBalances (first:1000) {
+  dailyInvestorTokenBalances (skip: ${offset}, first:1000, orderBy: id, orderDirection: desc) {
     pool {
       id
     }
@@ -152,21 +154,29 @@ const dailyInvestorTokenBalances = gql`
     juniorTokenValue
   }
 }
-`
-
-
+`})
+}
 
 loaders.push((actions) => {
-    return graphClient.query({query: dailyInvestorTokenBalances }).then((query) => {
+    let queries = []
+    const loops = 15
+    for (let i = 0; i < loops; i++) {
+      queries.push(ditbQuery(i))
+    }
+    return Promise.all(queries)
+    .then((query) => {
+        if (query[loops-1].data.dailyInvestorTokenBalances.length === 1000) return;
         let days = {}
-        query.data.dailyInvestorTokenBalances.forEach((ditb) => {
-          let day = ditb.day.id
-          if (days[day] == null) days[day] = { balances: {}, count: 0, total: new BigNumber("0")}
-          //let balanceKey = ditb.pool.id + ditb.account.id
-          let value = parseDecimal(ditb.seniorTokenValue).plus(parseDecimal(ditb.juniorTokenValue))
-          // days[day].balances[balanceKey] = {account: ditb.account.id, pool: ditb.pool.id, value: value}
-          days[day].total = days[day].total.plus(value)
-          days[day].count += 1
+        query.forEach((query) => {
+          query.data.dailyInvestorTokenBalances.forEach((ditb) => {
+            let day = ditb.day.id
+            if (days[day] == null) days[day] = { balances: {}, count: 0, total: new BigNumber("0")}
+            //let balanceKey = ditb.pool.id + ditb.account.id
+            let value = parseDecimal(ditb.seniorTokenValue).plus(parseDecimal(ditb.juniorTokenValue))
+            // days[day].balances[balanceKey] = {account: ditb.account.id, pool: ditb.pool.id, value: value}
+            days[day].total = days[day].total.plus(value)
+            days[day].count += 1
+          })
         })
 
 

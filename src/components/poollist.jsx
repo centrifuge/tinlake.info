@@ -69,7 +69,7 @@ export const PoolList = () => {
       <Text size="large" weight={500}>
         Pools
       </Text>
-      <Box width="100%" overflow="scroll">
+      <Box width="100%" overflow="auto">
         <Table>
           <TableHeader>
             <TableRow>
